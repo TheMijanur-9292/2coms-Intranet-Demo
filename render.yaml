@@ -2,35 +2,34 @@ services:
   - type: web
     name: 2coms-intranet-backend
     runtime: node
-    region: oregon
-
-    # Root directory of the backend
     rootDir: backend
-
-    # Build step: compile TypeScript to dist/
     buildCommand: npm install && npm run build
-
-    # Start the compiled server
-    startCommand: node dist/server.js
-
-    # Node version
+    startCommand: npm start
+    healthCheckPath: /health
     envVars:
-      - key: NODE_VERSION
-        value: 20.10.0
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000
-
-      # Add these in Render dashboard → Environment tab:
-      # - MONGODB_URI
-      # - JWT_SECRET
-      # - JWT_REFRESH_SECRET
-      # - FRONTEND_URL   (your Netlify URL)
-      # - CLOUDINARY_CLOUD_NAME
-      # - CLOUDINARY_API_KEY
-      # - CLOUDINARY_API_SECRET
-
-    healthCheckPath: /health
-
-    autoDeploy: true
+        value: 5000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_REFRESH_EXPIRE
+        value: 30d
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100

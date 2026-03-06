@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Required for Netlify Next.js plugin
+  output: 'standalone',
+
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },
