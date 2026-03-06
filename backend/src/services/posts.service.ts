@@ -278,7 +278,7 @@ export class PostsService {
       throw new AppError('Post not found', 404);
     }
 
-    const comment = post.comments.id(commentId);
+    const comment = (post.comments as any).id(commentId);
     if (!comment) {
       throw new AppError('Comment not found', 404);
     }

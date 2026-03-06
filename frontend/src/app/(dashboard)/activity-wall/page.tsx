@@ -84,9 +84,10 @@ export default function ActivityWallPage() {
 
   const handlePost = () => {
     if (!postText.trim()) return;
+    const departmentName = typeof user?.departmentId === 'object' ? user.departmentId.name : 'General';
     const newPost = {
       id: Date.now().toString(),
-      author: { name: `${user?.firstName || 'You'} ${user?.lastName || ''}`, designation: user?.designation || 'Employee', department: user?.department || '', avatar: firstName },
+      author: { name: `${user?.firstName || 'You'} ${user?.lastName || ''}`, designation: user?.designation || 'Employee', department: departmentName, avatar: firstName },
       content: postText,
       image: null,
       reactions: { like: 0, celebrate: 0, insightful: 0, funny: 0 },
