@@ -138,7 +138,7 @@ export class AnnouncementsService {
 
     if (!alreadyRead) {
       announcement.readBy.push({
-        userId,
+        userId: new (require('mongoose').Types.ObjectId)(userId),
         readAt: new Date(),
       });
       await announcement.save();

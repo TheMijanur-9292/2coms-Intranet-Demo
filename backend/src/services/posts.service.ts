@@ -179,8 +179,8 @@ export class PostsService {
 
     // Add new reaction
     post.reactions.push({
-      userId,
-      type: reactionType,
+      userId: new (require('mongoose').Types.ObjectId)(userId),
+      type: reactionType as any,
       createdAt: new Date(),
     });
 
@@ -237,7 +237,7 @@ export class PostsService {
 
     const comment = {
       _id: new mongoose.Types.ObjectId(),
-      userId,
+      userId: new mongoose.Types.ObjectId(userId),
       content,
       reactions: [],
       moderation: { status: 'approved' },
@@ -301,7 +301,7 @@ export class PostsService {
       throw new AppError('Post not found', 404);
     }
 
-    const comment = post.comments.id(commentId);
+    const comment = (post.comments as any).id(commentId);
     if (!comment) {
       throw new AppError('Comment not found', 404);
     }
@@ -310,7 +310,7 @@ export class PostsService {
       throw new AppError('Not authorized to delete this comment', 403);
     }
 
-    post.comments.pull(commentId);
+    (post.comments as any).pull(commentId);
     post.engagement.commentCount = post.comments.length;
     post.engagement.engagementScore =
       post.reactions.length + post.comments.length * 2 + post.engagement.viewCount * 0.1;

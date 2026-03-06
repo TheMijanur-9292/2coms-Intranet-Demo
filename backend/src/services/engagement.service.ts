@@ -88,7 +88,7 @@ export class EngagementService {
     if (!post) throw new AppError('Post not found', 404);
 
     post.reactions = post.reactions.filter((r: any) => r.userId.toString() !== userId);
-    post.reactions.push({ userId, type: reactionType, createdAt: new Date() });
+    post.reactions.push({ userId: new (require('mongoose').Types.ObjectId)(userId), type: reactionType as any, createdAt: new Date() });
     post.engagement.reactionCount = post.reactions.length;
     post.engagement.engagementScore =
       post.reactions.length + post.comments.length * 2 + post.engagement.viewCount * 0.1;
@@ -114,7 +114,7 @@ export class EngagementService {
     };
 
     if (parentId) {
-      const parentComment = post.comments.id(parentId);
+      const parentComment = (post.comments as any).id(parentId);
       if (!parentComment) throw new AppError('Parent comment not found', 404);
       if (!parentComment.replies) parentComment.replies = [];
       parentComment.replies.push(comment);
@@ -229,7 +229,7 @@ export class EngagementService {
 
     if (!joinee.welcomeMessages) joinee.welcomeMessages = [];
     joinee.welcomeMessages.push({
-      from: userId,
+      from: new (require('mongoose').Types.ObjectId)(userId),
       message,
       createdAt: new Date(),
     });
@@ -376,7 +376,7 @@ export class EngagementService {
     const post = await Post.findById(postId);
     if (!post) throw new AppError('Post not found', 404);
 
-    const comment = post.comments.id(commentId);
+    const comment = (post.comments as any).id(commentId);
     if (!comment) throw new AppError('Comment not found', 404);
     if (comment.userId.toString() !== userId) {
       throw new AppError('Not authorized', 403);
@@ -393,13 +393,13 @@ export class EngagementService {
     const post = await Post.findById(postId);
     if (!post) throw new AppError('Post not found', 404);
 
-    const comment = post.comments.id(commentId);
+    const comment = (post.comments as any).id(commentId);
     if (!comment) throw new AppError('Comment not found', 404);
     if (comment.userId.toString() !== userId) {
       throw new AppError('Not authorized', 403);
     }
 
-    post.comments.pull(commentId);
+    (post.comments as any).pull(commentId);
     post.engagement.commentCount = post.comments.length;
     await post.save();
 

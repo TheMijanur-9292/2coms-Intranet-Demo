@@ -58,7 +58,8 @@ export class AuthService {
     const token = user.generateAuthToken();
 
     // Return user without password
-    const { password: _pw, ...userWithoutPassword } = user.toObject() as Record<string, unknown>;
+    const userObj = user.toObject() as any;
+    const { password: _pw, ...userWithoutPassword } = userObj;
 
     logger.info(`User logged in: ${user.email}`);
     return { user: userWithoutPassword, token };
